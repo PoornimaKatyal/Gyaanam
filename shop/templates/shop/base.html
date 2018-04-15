@@ -1,0 +1,147 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}" >
+    <script type="text/javascript" src="{% static 'shop/js/jquery-1.9.1.min.js' %}"></script>
+    <!-- <script type="text/javascript" href="{% static 'shop/js/products.js' %}"></script> -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block style %}
+    {% endblock %}
+
+    <title>Turtle Basket</title>
+  </head>
+  <body style="background-color: #FFF5EE;">
+    <div class='container-fluid'>
+      <div style="background-color: #FF8040;">
+      
+     
+      
+   <nav class="navbar navbar-expand-lg navbar-light">
+
+  <a class="navbar-brand" href="{% url 'index' %}" style = "color:white; font-size: 150%; margin: 0px; padding-right: 15px">Turtle Basket</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      {% url 'products' as products %}
+      {% url 'compititive' as compititive %}
+      {% url 'contact_us' as contact_us %}
+      <li class="nav-item">
+        <div {% if request.path == products %} class="active" {% endif %}>
+        <a class="nav-link" href="{% url 'compititive' id=1 %}" style = "font-color:#0000A0">Academic <span class="sr-only">(current)</span></a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <div {% if request.path == compititive %} class="active" {% endif %}>
+
+        <a class="nav-link" href="{% url 'compititive' id=2 %}">Compititive</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Used Books
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Sell</a>
+          <a class="dropdown-item" href="#">Purchase</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Terms & Conditions</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Discounted</a>
+      </li>
+    </ul>
+      
+   <div class='ml-auto' style="font-size:80%;">
+        <ul class='navbar-nav navbar-right'>
+          <li class="nav-item">
+            <div {% if request.path == contact_us %} class="active" {% endif %}>
+            <a class="nav-link" href="{% url 'contact_us' %}">
+            
+            Contact us
+            </a>
+            </div>
+          </li>
+          
+          <li class='nav-item dropdown'>
+            
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             
+              Welcome {{ request.session.username }}
+
+
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% if not request.user.is_authenticated %}
+              <a class="dropdown-item" href="{% url 'account_login' %}">Login</a>
+              <a class="dropdown-item" href="{% url 'account_signup' %}">Signup</a>
+              {% else %}
+              <a class="dropdown-item" href="{% url 'user_account' %}">My orders</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+              {% endif %}
+            </div>
+
+          </li>
+        </ul>
+      </div>
+
+    <form class="navbar-form navbar-right">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search">
+          <div class="input-group-btn">
+            <button class="btn btn-link" style="color:white;" type="submit">
+              <i class="fa fa-fw fa-search" aria-hidden="true"></i>
+            </button>
+          </div>
+      </div>
+    </form>  
+    <div class="nav-item">
+            <div id="cart_item_count">
+            <a class="nav-link" {% if request.session.cart_item_count == "0" %} href="{% url 'index' %}"
+                                    {% else %} href="{% url 'show_cart' %}" {% endif %}>
+           
+            {% load cart_tags %}
+            {% get_cart as cart %}
+            cart-{{ cart.count }}
+            </a>
+            </div>
+          </div>  
+    
+   
+    
+  </div>
+</nav>
+</div>
+
+{% block content %}
+    
+{% endblock %}
+
+
+</div>
+
+
+
+{% block addscript %}
+    
+{% endblock %}
+   
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    
+  </body>
+</html>

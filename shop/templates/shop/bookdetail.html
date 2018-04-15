@@ -1,0 +1,117 @@
+{% extends 'shop/base.html' %}
+
+{% load static %}
+
+{% block style %}
+
+<link rel="stylesheet" href="{% static 'shop/css/bookdetail_style.css' %}" >
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class='row'>
+<div class='col-md-10 offset-md-1'>
+<div><h3>{{ book.title }}</h3></div>
+ <div class="row justify-content-md-center grid-divider">
+    <div class="col col-md-5">
+     {% if book.cover_image %}
+        <img height="400" width="330" src="{{ book.cover_image.url }}" alt="book">
+     {% else %}
+       	<img src="{% static "shop/pics/physics.jpg" %}" alt="book">
+      {% endif %}
+    </div>
+    <div class="col-md-7" style="background-color: #ffffcc">
+      <ul style="list-style-type:none">
+      	<li class="subtitle" style = "">{{ book.subtitle }}</li>
+      	<li style = "font-size: 20px;">Edition : <span style = "font-size: 20px; font-style: oblique;">{{ book.edition }}</span></li>
+        <li style = "font-size: 17px;">Authors : 
+          <span style = "font-size: 18px;">
+            <ul style="list-style-type:none">
+          {% for author in book.author.all %}
+            <li>{{ author }} </li>
+          {% endfor %} </ul>
+        </span>
+        </li>
+        <li class= "mt-1 mb-2" style = "font-size: 17px;">Price :  {{ book.price }} &#x20B9;</li>
+        <li class= "mt-1 mb-2" style = "font-size: 17px;">
+          Quantity:   <input id="quantity" type="number" name="quantity" min="1" max="5"></li>
+        <li><a href="{% url 'show_cart' %}" id="add"><button class="button"><span>Add to cart</span></button></a><li>
+
+        <hr>
+        
+        <li class = "mt-1 mb-2" style = "font-size: 15px;">Genre : 
+        <span style = "font-size: 15px;">
+            <ul style="list-style-type:none">{% for genres in book.genre.all %}<li>{{ genres }}<li> {% endfor %}
+            </ul>
+        </span>
+        </li>
+
+        <li class = "mt-1 mb-1">Publisher : {{ book.publisher }}</li>
+        <li class = "mt-1 mb-1">Binding : {{ book.binding }}</li>
+        <li class = "mt-1 mb-1">Language : {{ book.language }}</li>
+        <li class = "mt-1 mb-1">Number of pages : {{ book.num_pages }}</li>
+      	
+      </ul>
+    </div>
+    <div>
+      <h4>About The Book</h4>
+
+      <hr>
+
+      {{ book.description }}
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+{% endblock %}
+
+{% block addscript %}
+
+<script src="{% static 'shop/js/jquery-2.1.1.js' %}"></script>
+
+	<script type="text/javascript">
+    $(document).ready(function(){   
+        
+	    console.log("clicked");
+	    $('#add').on('click', function(e){
+	    	e.preventDefault();
+	    	var id = {{ book.id }};
+        var quantity = $('#quantity').val();
+	    	console.log(id+'-'+quantity);
+	    	$.ajax({
+
+	    		"dataType":"json",
+	    		"url":"{% url 'add_to_cart' %}",
+	    		"data":{
+	    			id: id,
+            quantity: quantity,
+					csrfmiddlewaretoken: '{{ csrf_token }}',
+	    		},
+	    		"success": function(data){
+	    			console.log("worked");
+            console.log(data.is_added);
+            document.location = "{% url 'show_cart' %}";
+            
+	    			
+	    		},
+	    		"error": function(){
+	    			console.log("error");
+	    			console.log(error);
+	    		}
+	    	});
+
+	    	
+	    });
+
+              
+        
+    });	
+	</script>
+    
+{% endblock %}

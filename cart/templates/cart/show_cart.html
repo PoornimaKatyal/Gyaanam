@@ -1,0 +1,119 @@
+{% extends 'shop/base.html' %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'cart/css/showcart.css' %}" >
+{% endblock %}
+
+
+{% load cart_tags %}
+
+
+{% block content %}
+
+
+{% get_cart as cart %}
+<div class='col-md-5 offset-md-3'>
+
+    
+        <h2>Hello {{ request.session.username }}</h2>
+        <h2>Your basket</h2>
+    
+<div class="px-2 cart">
+<div class="table-responsive">
+    <table class = 'table'>
+        
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart.items %}
+            
+            <tr>
+            <th scope="row">1</th>
+            <td>{{ item.book }}</br> {{ item.book.subtitle }}</td>
+            <td><input id="quantity" type="number" name={{ item.book.id }} min="0" max="10" value = {{ item.quantity }}></td>
+            <td>{{ item.book.price }}</td>
+            <td>{{ item.subtotal }}</td>
+            </tr>
+            
+            {% endfor %}
+            <tr>
+            
+            <td colspan=4>Total amount:</td>
+            
+            <td>{{ cart.total }}</td>
+            </tr>
+        
+        </tbody>
+    </table>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class='mt-2 row justify-content-md-left'>
+    <div class='col-md-4 offset-md-3'>
+        <a href="{% url 'index' %}"><button class="button"> Continue Shopping </button></a>
+
+        <a href="{% url 'place_order' %}"><button class="orderbutton" id="order"> Place Order </button></a>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block addscript %}
+
+<script src="{% static 'shop/js/jquery-2.1.1.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+               var book = {{ cart.item }}
+            console.log(book);
+            
+                $( "input#quantity" ).each(function() {
+                    $(this).change(function(){
+                        
+                        var id = $(this).attr('name');
+                        var quantity = $(this).val();
+                        console.log( "quantity : " + quantity );
+                        console.log(id);
+                        $.ajax({
+                            "type":"POST",
+                                "url":"{% url 'set_quantity' %}",
+                                "data":{
+                                    product_id: id,
+                                    quantity: quantity,
+                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                },
+                                "success": function(data){
+                                    console.log("worked");
+                                    location.reload();
+                                },
+
+                            
+                        });
+                });
+            
+            
+            
+        });
+        });
+        
+    
+    
+    </script>
+    
+{% endblock %}
+
+
